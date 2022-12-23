@@ -1,7 +1,10 @@
+const fs = require("fs");
+const nombreArchivo = "iphone.json";
+
 class ProductManager {
     constructor () {
-        this.products = []
-        this.product = Product
+        this.products = this.cargarDelArchivo();
+        this.product = Product;
     }
     addProduct (product) {
         if (this.getProducts().find((element) => element.code == product.code)){
@@ -9,6 +12,7 @@ class ProductManager {
         }else{
             product.id = this.getProducts().length + 1;
             this.products.push(product);
+            this.guardrarCambios();
         }
     }
     getProducts () {
@@ -21,6 +25,14 @@ class ProductManager {
         }else{
             console.log("El producto con ese id es: ", productById);
         }
+    }
+    guardrarCambios () {
+        fs.writeFileSync(nombreArchivo, JSON.stringify(this.products));
+    }
+    cargarDelArchivo () {
+        const productsArchivo = fs.readFileSync(nombreArchivo, "utf-8");
+        const productArchivoOBJECT = JSON.parse(productsArchivo);
+        return productArchivoOBJECT;
     }
 }
 
@@ -38,14 +50,11 @@ class Product extends ProductManager{
 
 const newProductManager = new ProductManager();
 
-newProductManager.addProduct({title: "Iphone 11", description: "Smartphone", price: 600, thumbnail: "iphone11.jpg", code: 2367, stock: 34})
-newProductManager.addProduct({title: "Iphone 12", description: "Smartphone", price: 700, thumbnail: "iphone12.jpg", code: 8923, stock: 72})
 newProductManager.addProduct({title: "Iphone 13", description: "Smartphone", price: 800, thumbnail: "iphone13.jpg", code: 6743, stock: 57})
 newProductManager.addProduct({title: "Iphone 14", description: "Smartphone", price: 900, thumbnail: "iphone14.jpg", code: 9045, stock: 99})
 
 console.log(newProductManager.getProducts())
 
-console.log(newProductManager.getProductsById(2))
 
 
 
